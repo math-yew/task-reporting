@@ -1,78 +1,71 @@
 const express = require('express');
-// const mongoose = require('mongoose');
+const MongoClient = require('mongodb').MongoClient;
+var bodyParser = require('body-parser');
+var ObjectId = require('mongodb').ObjectId;
+
 const config = require('./config.js');
-
-console.log("uri: " + config.uri);
-
-
-
-const { MongoClient } = require('mongodb');
-
-const client = new MongoClient(config.uri);
-
-async function run() {
-  try {
-    await client.connect();
-    const db = client.db('sample_mflix');
-    const collection = db.collection('movies');
-
-    // Find the first document in the collection
-    const first = await collection.findOne();
-    console.log(first);
-  } finally {
-    // Close the database connection when finished or an error occurs
-    await client.close();
-  }
-}
-run().catch(console.error);
-
-
-
-
-
 const app = express();
+let db;
 
-// Connect to MongoDB
-// mongoose.connect('mongodb://localhost/your_db_name', { useNewUrlParser: true });
-
-// Define a schema for your data
-// const yourSchema = new mongoose.Schema({
-//   field1: String,
-//   field2: Number,
-//   field3: Date
-// });
-
-// Create a model for your data
-// const YourModel = mongoose.model('YourModel', yourSchema);
-
-// Create an endpoint for saving data
-app.post('/save', (req, res) => {
-  // const yourData = new YourModel({
-  //   field1: req.body.field1,
-  //   field2: req.body.field2,
-  //   field3: req.body.field3
-  // });
-  // yourData.save((err) => {
-  //   if (err) {
-  //     res.send(err);
-  //   } else {
-  //     res.send('Data saved successfully!');
-  //   }
-  // });
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
+  res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+  next();
 });
 
-// Create an endpoint for retrieving data
+app.use(bodyParser.json());
+
+MongoClient.connect(config.uri, { useNewUrlParser: true }, (err, client) => {
+  if (err) return console.log(err);
+  db = client.db('sample_guides');
+  app.listen(3003, () => {
+    console.log('listening on 3003');
+  });
+});
+
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
+app.get('/dataOne', (req, res) => {
+  console.log("GET");
+  db.collection('planets').findOne({},(err, result) => {
+    if (err) return console.log(err);
+    res.send(result);
+  });
+});
+
 app.get('/data', (req, res) => {
-  // YourModel.find((err, data) => {
-  //   if (err) {
-  //     res.send(err);
-  //   } else {
-  //     res.send(data);
-  //   }
-  // });
+  db.collection('planets').find({}).toArray((err, result) => {
+    if (err) return console.log(err);
+    res.send(result);
+  });
 });
 
-// Start the server
-app.listen(3000, () => {
-  console.log('Server listening on port 3000');
+app.post('/data', (req, res) => {
+  console.log("req.body: " + req.body.name);
+  db.collection('planets').insertOne(req.body, (err, result) => {
+    if (err) return console.log(err);
+    res.send(result);
+  });
+});
+
+app.put('/data/:id', (req, res) => {
+  console.log(req.params.id);
+  console.log(JSON.stringify(req.body));
+  // db.collection('planets').updateOne({name: "Planet Y"}, {$set: req.body}, (err, result) => {
+  // db.collection('planets').updateOne({_id: "ObjectId('"+req.params.id+"')'"}, {$set: req.body}, (err, result) => {
+  db.collection('planets').updateOne({_id: ObjectId(req.params.id)}, {$set: req.body}, (err, result) => {
+    if (err) return console.log(err);
+    res.send(result);
+  });
+});
+
+app.delete('/data/:id', (req, res) => {
+  db.collection('planets').deleteOne({_id: ObjectId(req.params.id)}, (err, result) => {
+    if (err) return console.log(err);
+    res.send(result);
+  });
 });
