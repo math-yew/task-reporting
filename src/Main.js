@@ -15,11 +15,31 @@ const Main = () => {
   };
   const [id, setId] = useState(null);
   const [data, setData] = useState([]);
-  const [tasks, setTasks] = useState([{task:"", complete:false}]);
-  const [taskInput, setTaskInput] = useState("");
   const [days, setDays] = useState(initialDays);
   const [name, setName] = useState();
   const [description, setDescription] = useState();
+
+
+  const [tasks, setTasks] = useState([]);
+  const [input, setInput] = useState("");
+
+  const addTask = (e) => {
+    e.preventDefault();
+    setTasks([...tasks, { task: input, completed: false }]);
+    setInput("");
+  };
+
+  const toggleComplete = (index) => {
+    const newTasks = [...tasks];
+    newTasks[index].completed = !newTasks[index].completed;
+    setTasks(newTasks);
+  };
+
+  const removeTask = (index) => {
+    let newTasks = [...tasks];
+    newTasks.splice(index, 1);
+    setTasks(newTasks);
+  };
 
   useEffect(() => {
     console.log("GET ALL");
@@ -38,15 +58,7 @@ const Main = () => {
     setDays((prevState) => ({ ...prevState, [name]: value }));
 };
 
-  const addTask = (e) => {
-    e.preventDefault();
-    let arr = [ ...tasks, {task:taskInput, complete:false}];
-    console.log(JSON.stringify(arr));
-    console.log(typeof arr);
-    console.log(Array.isArray(arr));
-    // setTasks(arr.toArray());
-    setTaskInput("");
-};
+
 
   const changeField = (e) => {
     const { name, value } = e.target;
@@ -73,7 +85,7 @@ const Main = () => {
       addedToSlack: false,
       days: days,
       addedToTimecard: false,
-      tasks: [],
+      tasks: [...tasks],
       notes:""
     };
     console.log("readyData:" + readyData);
@@ -121,23 +133,38 @@ const Main = () => {
         <button type="submit">Save</button>
       </form>
       <p>{data.name}</p>
-      <ul>
-        {tasks.map((item, i) => (
-          <li key={i}>
-          <p>{item.complete}</p>
-          <p>{item.task}</p>
-          </li>
-        ))}
-      </ul>
-      <p>T:{tasks}</p>
-      <form onSubmit={addTask}>
-        <input
-          type="text"
-          value={taskInput}
-          onChange={(e) => setTaskInput(e.target.value)}
-        />
-        <button type="submit">Add Task</button>
-      </form>
+
+
+
+
+      <div>
+
+      <p>{JSON.stringify(tasks)}</p>
+        <form onSubmit={addTask}>
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+          />
+          <button type="submit">Add Task</button>
+        </form>
+        <ul>
+          {tasks.map((task, index) => (
+            <li key={index}>
+              <input
+                type="checkbox"
+                checked={task.completed}
+                onChange={() => toggleComplete(index)}
+              />
+              {task.task}
+              <span onClick={()=>removeTask(index)}>X</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+
+
 
     </div>
   );
