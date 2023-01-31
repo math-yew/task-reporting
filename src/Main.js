@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Tasks } from './Tasks';
 
 const Main = () => {
-
 
   let initialDays = {
     monday: "",
@@ -18,31 +18,10 @@ const Main = () => {
   const [days, setDays] = useState(initialDays);
   const [name, setName] = useState();
   const [description, setDescription] = useState();
-
-
   const [tasks, setTasks] = useState([]);
-  const [input, setInput] = useState("");
 
-  const addTask = (e) => {
-    e.preventDefault();
-    setTasks([...tasks, { task: input, completed: false }]);
-    setInput("");
-  };
-
-  const toggleComplete = (index) => {
-    const newTasks = [...tasks];
-    newTasks[index].completed = !newTasks[index].completed;
-    setTasks(newTasks);
-  };
-
-  const removeTask = (index) => {
-    let newTasks = [...tasks];
-    newTasks.splice(index, 1);
-    setTasks(newTasks);
-  };
 
   useEffect(() => {
-    console.log("GET ALL");
     axios.get('http://localhost:3003/dataOne')
       .then(res => {
         setData(res.data);
@@ -57,8 +36,6 @@ const Main = () => {
     const { name, value } = e.target;
     setDays((prevState) => ({ ...prevState, [name]: value }));
 };
-
-
 
   const changeField = (e) => {
     const { name, value } = e.target;
@@ -88,7 +65,7 @@ const Main = () => {
       tasks: [...tasks],
       notes:""
     };
-    console.log("readyData:" + readyData);
+
     if(!!id){
       axios.put(`http://localhost:3003/data/${id}`, readyData)
         .then(res => {
@@ -101,9 +78,7 @@ const Main = () => {
     }
   }
 
-
   const handleUpdate = (id, newData) => {
-    console.log("id: " + id);
     axios.put(`http://localhost:3003/data/${id}`, newData)
       .then(res => {
         const updatedData = data.map(item => item._id === id ? res.data : item);
@@ -120,11 +95,8 @@ const Main = () => {
   }
 
   return (
-    <div>
+    <>
       <p>{JSON.stringify(data)}</p>
-      <p>{JSON.stringify(name)}</p>
-      <p>{JSON.stringify(description)}</p>
-      <p>{JSON.stringify(data.days)}</p>
       <p>{JSON.stringify(days)}</p>
       <form onSubmit={handleSubmit}>
         <input type="text" name="name" placeholder="Name" value={data.name ||""} onChange={(e)=>changeField(e)} />
@@ -133,43 +105,10 @@ const Main = () => {
         <button type="submit">Save</button>
       </form>
       <p>{data.name}</p>
-
-
-
-
-      <div>
-
-      <p>{JSON.stringify(tasks)}</p>
-        <form onSubmit={addTask}>
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-          <button type="submit">Add Task</button>
-        </form>
-        <ul>
-          {tasks.map((task, index) => (
-            <li key={index}>
-              <input
-                type="checkbox"
-                checked={task.completed}
-                onChange={() => toggleComplete(index)}
-              />
-              {task.task}
-              <span onClick={()=>removeTask(index)}>X</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-
-
-
-    </div>
+      <Tasks tasks={tasks} setTasks={setTasks} />
+    </>
   );
 };
-
 
 function Days (props){
   let { days } = props;
