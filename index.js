@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 
 MongoClient.connect(config.uri, { useNewUrlParser: true }, (err, client) => {
   if (err) return console.log(err);
-  db = client.db('sample_guides');
+  db = client.db('sollus');
   app.listen(3003, () => {
     console.log('listening on 3003');
   });
@@ -31,14 +31,14 @@ app.get('/', (req, res) => {
 
 app.get('/dataOne', (req, res) => {
   console.log("GET");
-  db.collection('planets').findOne({},(err, result) => {
+  db.collection('task_reporting').findOne({},(err, result) => {
     if (err) return console.log(err);
     res.send(result);
   });
 });
 
 app.get('/data', (req, res) => {
-  db.collection('planets').find({}).toArray((err, result) => {
+  db.collection('task_reporting').find({}).toArray((err, result) => {
     if (err) return console.log(err);
     res.send(result);
   });
@@ -46,7 +46,7 @@ app.get('/data', (req, res) => {
 
 app.post('/data', (req, res) => {
   console.log("req.body: " + req.body.name);
-  db.collection('planets').insertOne(req.body, (err, result) => {
+  db.collection('task_reporting').insertOne(req.body, (err, result) => {
     if (err) return console.log(err);
     res.send(result);
   });
@@ -55,16 +55,16 @@ app.post('/data', (req, res) => {
 app.put('/data/:id', (req, res) => {
   console.log(req.params.id);
   console.log(JSON.stringify(req.body));
-  // db.collection('planets').updateOne({name: "Planet Y"}, {$set: req.body}, (err, result) => {
-  // db.collection('planets').updateOne({_id: "ObjectId('"+req.params.id+"')'"}, {$set: req.body}, (err, result) => {
-  db.collection('planets').updateOne({_id: ObjectId(req.params.id)}, {$set: req.body}, (err, result) => {
+  // db.collection('task_reporting').updateOne({name: "Planet Y"}, {$set: req.body}, (err, result) => {
+  // db.collection('task_reporting').updateOne({_id: "ObjectId('"+req.params.id+"')'"}, {$set: req.body}, (err, result) => {
+  db.collection('task_reporting').updateOne({_id: ObjectId(req.params.id)}, {$set: req.body}, (err, result) => {
     if (err) return console.log(err);
     res.send(result);
   });
 });
 
 app.delete('/data/:id', (req, res) => {
-  db.collection('planets').deleteOne({_id: ObjectId(req.params.id)}, (err, result) => {
+  db.collection('task_reporting').deleteOne({_id: ObjectId(req.params.id)}, (err, result) => {
     if (err) return console.log(err);
     res.send(result);
   });
