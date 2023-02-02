@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Tasks } from './Tasks';
 
-const Main = () => {
+const Main = (props) => {
+
+  const { id } = props;
 
   let initialDays = {
     monday: "",
@@ -13,7 +15,7 @@ const Main = () => {
     saturday: "",
     sunday: ""
   };
-  const [id, setId] = useState(null);
+
   const [data, setData] = useState([]);
   const [days, setDays] = useState(initialDays);
   const [name, setName] = useState();
@@ -22,15 +24,25 @@ const Main = () => {
 
 
   useEffect(() => {
-    axios.get('http://localhost:3003/dataOne')
+    console.log("useEffect");
+    if(!!id) {
+      axios.get(`http://localhost:3003/data/${id}`)
       .then(res => {
         setData(res.data);
-        setId(res.data._id);
         setDays(res.data.days);
         setTasks(res.data.tasks);
+        setName(res.data.name);
+        setDescription(res.data.description);
         }
       );
-  }, []);
+    } else {
+      setData(null);
+      setDays(initialDays);
+      setTasks([]);
+      setName("");
+      setDescription("");
+    }
+  }, [id]);
 
   const changeDays = (e) => {
     const { name, value } = e.target;
@@ -96,15 +108,14 @@ const Main = () => {
 
   return (
     <>
-      <p>{JSON.stringify(data)}</p>
-      <p>{JSON.stringify(days)}</p>
+      <p>ID: {JSON.stringify(id)}</p>
       <form onSubmit={handleSubmit}>
-        <input type="text" name="name" placeholder="Name" value={data.name ||""} onChange={(e)=>changeField(e)} />
-        <input type="text" name="description" placeholder="Description" value={data.description ||""} onChange={(e)=>changeField(e)} />
+        <input type="text" name="name" placeholder="Name" value={name ||""} onChange={(e)=>changeField(e)} />
+        <input type="text" name="description" placeholder="Description" value={description ||""} onChange={(e)=>changeField(e)} />
         <Days days={days || initialDays} changeDays={changeDays} />
         <button type="submit">Save</button>
       </form>
-      <p>{data.name}</p>
+      <p>{(!!data && data.name) ? data.name : null}</p>
       <Tasks tasks={tasks} setTasks={setTasks} />
     </>
   );

@@ -40,22 +40,24 @@ function Tasks (props){
         <button type="submit">Add Task</button>
       </form>
       <ul>
-        {tasks.map((item, index) => (
-          <li key={index}>
-            <input
-              type="checkbox"
-              checked={item.completed}
-              onChange={() => toggleComplete(index)}
-            />
-            <input
-              type="text"
-              value={item.task}
-              onChange={(e) => updateTask(e, index)}
-            />
-            {item.task}
-            <span onClick={()=>removeTask(index)}>    X</span>
-          </li>
-        ))}
+        {
+            (tasks || []).map((item, index) => (
+              <li key={index}>
+                <input
+                  type="checkbox"
+                  checked={item.completed}
+                  onChange={() => toggleComplete(index)}
+                />
+                <input
+                  type="text"
+                  value={item.task}
+                  onChange={(e) => updateTask(e, index)}
+                />
+                {item.task}
+                <span onClick={()=>removeTask(index)}>    X</span>
+              </li>
+            ))
+        }
       </ul>
     </>
   )

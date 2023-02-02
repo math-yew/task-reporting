@@ -29,6 +29,14 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
+app.get('/data/:id', (req, res) => {
+  console.log("GET ID: " + req.params.id);
+  db.collection('task_reporting').findOne({_id: ObjectId(req.params.id)}, (err, result) => {
+    if (err) return console.log(err);
+    res.send(result);
+  });
+});
+
 app.get('/dataOne', (req, res) => {
   console.log("GET");
   db.collection('task_reporting').findOne({},(err, result) => {
