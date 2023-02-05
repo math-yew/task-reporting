@@ -30,7 +30,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/data/:id', (req, res) => {
-  console.log("GET ID: " + req.params.id);
+  console.log("get id");
   db.collection('task_reporting').findOne({_id: ObjectId(req.params.id)}, (err, result) => {
     if (err) return console.log(err);
     res.send(result);
@@ -38,7 +38,7 @@ app.get('/data/:id', (req, res) => {
 });
 
 app.get('/dataOne', (req, res) => {
-  console.log("GET");
+  console.log("GETone");
   db.collection('task_reporting').findOne({},(err, result) => {
     if (err) return console.log(err);
     res.send(result);
@@ -46,14 +46,24 @@ app.get('/dataOne', (req, res) => {
 });
 
 app.get('/data', (req, res) => {
+  console.log("get");
   db.collection('task_reporting').find({}).toArray((err, result) => {
     if (err) return console.log(err);
     res.send(result);
   });
 });
 
+app.get('/cases/:archive', (req, res) => {
+  console.log("case");
+  let query = (req.params.archive == 'true') ? {} : {archive: {$ne:true}};
+  db.collection('task_reporting').find(query).toArray((err, result) => {
+    if (err) return console.log(err);
+    res.send(result);
+  });
+});
+
 app.post('/data', (req, res) => {
-  console.log("req.body: " + req.body.name);
+  console.log("post");
   db.collection('task_reporting').insertOne(req.body, (err, result) => {
     if (err) return console.log(err);
     res.send(result);
@@ -61,18 +71,23 @@ app.post('/data', (req, res) => {
 });
 
 app.put('/data/:id', (req, res) => {
-  console.log(req.params.id);
-  console.log(JSON.stringify(req.body));
-  // db.collection('task_reporting').updateOne({name: "Planet Y"}, {$set: req.body}, (err, result) => {
-  // db.collection('task_reporting').updateOne({_id: "ObjectId('"+req.params.id+"')'"}, {$set: req.body}, (err, result) => {
+  console.log("put");
   db.collection('task_reporting').updateOne({_id: ObjectId(req.params.id)}, {$set: req.body}, (err, result) => {
     if (err) return console.log(err);
     res.send(result);
   });
 });
 
+// app.delete('/data/:id', (req, res) => {
+//   db.collection('task_reporting').deleteOne({_id: ObjectId(req.params.id)}, (err, result) => {
+//     if (err) return console.log(err);
+//     res.send(result);
+//   });
+// });
+
 app.delete('/data/:id', (req, res) => {
-  db.collection('task_reporting').deleteOne({_id: ObjectId(req.params.id)}, (err, result) => {
+  console.log("delete");
+  db.collection('task_reporting').deleteMany({tasks: []}, (err, result) => {
     if (err) return console.log(err);
     res.send(result);
   });

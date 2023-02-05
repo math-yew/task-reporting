@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Tasks } from './Tasks';
+import { ActionStepsTaken } from './ActionStepsTaken';
 
 const Main = (props) => {
 
-  const { id } = props;
+  const { id, setId } = props;
 
   let initialDays = {
     monday: "",
@@ -16,11 +17,19 @@ const Main = (props) => {
     sunday: ""
   };
 
-  const [data, setData] = useState([]);
+  let [data, setData] = useState([]);
   const [days, setDays] = useState(initialDays);
-  const [name, setName] = useState();
-  const [description, setDescription] = useState();
+  const [name, setName] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [description, setDescription] = useState("");
+  const [nextSteps, setNextSteps] = useState([]);
   const [tasks, setTasks] = useState([]);
+  const [actionStepsTaken, setActionStepsTaken] = useState([]);
+  const [archive, setArchive] = useState(false);
+  const [inSalesforce, setInSalesforce] = useState(false);
+  const [inTimecard, setInTimecard] = useState(false);
+  const [inSlack, setInSlack] = useState(false);
+  const [notes, setNotes] = useState(false);
 
 
   useEffect(() => {
@@ -31,16 +40,30 @@ const Main = (props) => {
         setData(res.data);
         setDays(res.data.days);
         setTasks(res.data.tasks);
+        setActionStepsTaken(res.data.actionStepsTaken);
         setName(res.data.name);
         setDescription(res.data.description);
+        setStartDate(res.data.startDate);
+        setArchive(res.data.archive);
+        setInSalesforce(res.data.inSalesforce);
+        setInTimecard(res.data.inTimecard);
+        setInSlack(res.data.inSlack);
+        setNotes(res.data.notes);
         }
       );
     } else {
       setData(null);
       setDays(initialDays);
       setTasks([]);
+      setActionStepsTaken([]);
       setName("");
       setDescription("");
+      setStartDate(null);
+      setArchive(false);
+      setInSalesforce(false);
+      setInTimecard(false);
+      setInSlack(false);
+      setNotes("");
     }
   }, [id]);
 
@@ -63,60 +86,122 @@ const Main = (props) => {
     }
   };
 
-  const handleSubmit = (e) => {
-    let readyData = {
-      name: name,
-      description: description,
-      startDate: null,
-      actionStepsTaken: [],
-      nextSteps: [],
-      addedToSalesforce: false,
-      addedToSlack: false,
-      days: days,
-      addedToTimecard: false,
-      tasks: [...tasks],
-      notes:""
-    };
+  let dataStructure = {
+    name: name,
+    description: description,
+    startDate: null,
+    actionStepsTaken: [],
+    nextSteps: [],
+    inSalesforce: false,
+    inTimecard: false,
+    inSlack: false,
+    days: {},
+    tasks: [],
+    notes:"",
+    archive: false,
+    notes: ""
+  };
 
-    if(!!id){
+
+  const saveCase = (duplicate) => {
+    let readyData = dataStructure;
+    if(duplicate){
+      readyData.tasks = nextSteps;
+    } else {
+      readyData.days = days;
+      readyData.tasks = [...tasks];
+      readyData.actionStepsTaken = [...actionStepsTaken];
+      readyData.archive = archive;
+      readyData.inSalesforce = inSalesforce;
+      readyData.inTimecard = inTimecard;
+      readyData.inSlack = inSlack;
+      readyData.notes = notes;
+  }
+
+    if(!!id && !duplicate){
       axios.put(`http://localhost:3003/data/${id}`, readyData)
         .then(res => {
-          const updatedData = data.map(item => item._id === id ? res.data : item);
-          setData(updatedData);
+          console.log(res.status == 200);
+          // setId(id);
         });
     }else {
+      readyData.startDate = new Date();
+      console.log(readyData.startDate);
       axios.post('http://localhost:3003/data', readyData)
-      .then(res => setData([...data, res.data]));
+      .then(res => {
+          console.log(res.status == 200);
+          // setId(id);
+      });
     }
   }
 
-  const handleUpdate = (id, newData) => {
-    axios.put(`http://localhost:3003/data/${id}`, newData)
-      .then(res => {
-        const updatedData = data.map(item => item._id === id ? res.data : item);
-        setData(updatedData);
-      });
-  }
-
-  const handleDelete = (id) => {
+  const handleDelete = () => {
     axios.delete(`http://localhost:3003/data/${id}`)
       .then(res => {
-        const updatedData = data.filter(item => item._id !== id);
-        setData(updatedData);
+        setId(id);
       });
   }
 
   return (
     <>
-      <p>ID: {JSON.stringify(id)}</p>
-      <form onSubmit={handleSubmit}>
-        <input type="text" name="name" placeholder="Name" value={name ||""} onChange={(e)=>changeField(e)} />
-        <input type="text" name="description" placeholder="Description" value={description ||""} onChange={(e)=>changeField(e)} />
-        <Days days={days || initialDays} changeDays={changeDays} />
-        <button type="submit">Save</button>
-      </form>
-      <p>{(!!data && data.name) ? data.name : null}</p>
+      <p>date: {startDate}</p>
+      <input type="text" name="name" placeholder="Name" value={name ||""} onChange={(e)=>changeField(e)} />
+      <input type="text" name="description" placeholder="Description" value={description ||""} onChange={(e)=>changeField(e)} />
+      <Days days={days || initialDays} changeDays={changeDays} />
+
+      <input
+        style={{transform: 'scale(1.5)', marginRight: '10px'}}
+        type="checkbox"
+        name="inSalesforce"
+        checked={inSalesforce || false}
+        onChange={() => setInSalesforce(!inSalesforce)}
+      />
+      <label name="archive">Salesforce</label>
+
+      <input
+        style={{transform: 'scale(1.5)', marginRight: '10px'}}
+        type="checkbox"
+        name="inTimecard"
+        checked={inTimecard || false}
+        onChange={() => setInTimecard(!inTimecard)}
+      />
+      <label name="archive">Timecard</label>
+
+      <input
+        style={{transform: 'scale(1.5)', marginRight: '10px'}}
+        type="checkbox"
+        name="inSlack"
+        checked={inSlack || false}
+        onChange={() => setInSlack(!inSlack)}
+      />
+      <label name="archive">Slack</label>
+
+      <label>
+        Notes:
+        <textarea
+          value={notes}
+          onChange={e => setNotes(e.target.value)}
+        />
+      </label>
+
+      <ActionStepsTaken actionStepsTaken={actionStepsTaken} setActionStepsTaken={setActionStepsTaken} />
       <Tasks tasks={tasks} setTasks={setTasks} />
+
+
+      <button  onClick={()=>saveCase()}>save</button>
+
+      <button  onClick={()=>saveCase(true)}>Duplicate</button>
+      <button  onClick={handleDelete}>Delete</button>
+
+      <input
+        style={{transform: 'scale(1.5)', marginRight: '10px'}}
+        type="checkbox"
+        name="archive"
+        checked={archive || false}
+        onChange={() => setArchive(!archive)}
+      />
+      <label name="archive">Archive</label>
+
     </>
   );
 };
@@ -124,11 +209,15 @@ const Main = (props) => {
 function Days (props){
   let { days } = props;
   return(
-    <>
-      <p>{JSON.stringify(props)}</p>
-      <input type="text" name="monday" placeholder="Mon" value={days.monday||""} onChange={(e)=>props.changeDays(e)} />
-      <input type="text" name="tuesday" placeholder="Mon" value={days.tuesday||""} onChange={(e)=>props.changeDays(e)} />
-    </>
+    <div>
+      <input className="day" type="text" name="monday" placeholder="Mon" value={days.monday||""} onChange={(e)=>props.changeDays(e)} />
+      <input className="day" type="text" name="tuesday" placeholder="Tue" value={days.tuesday||""} onChange={(e)=>props.changeDays(e)} />
+      <input className="day" type="text" name="wednesday" placeholder="Wed" value={days.wednesday||""} onChange={(e)=>props.changeDays(e)} />
+      <input className="day" type="text" name="thursday" placeholder="Thur" value={days.thursday||""} onChange={(e)=>props.changeDays(e)} />
+      <input className="day" type="text" name="friday" placeholder="Fri" value={days.friday||""} onChange={(e)=>props.changeDays(e)} />
+      <input className="day" type="text" name="saturday" placeholder="Sat" value={days.saturday||""} onChange={(e)=>props.changeDays(e)} />
+      <input className="day" type="text" name="sunday" placeholder="Sun" value={days.sunday||""} onChange={(e)=>props.changeDays(e)} />
+    </div>
   )
 }
 

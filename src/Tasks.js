@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 function Tasks (props){
-  let {tasks, setTasks} = props;
+  const {tasks, setTasks} = props;
   const [input, setInput] = useState("");
 
   const addTask = (e) => {
@@ -29,21 +29,14 @@ function Tasks (props){
   };
 
   return (
-    <>
-      <p>{JSON.stringify(tasks)}</p>
-      <form onSubmit={addTask}>
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-        <button type="submit">Add Task</button>
-      </form>
-      <ul>
+    <div style={{display:'flex', flexFlow: 'column wrap', alignItems: 'center'}}>
+      <h3>Tasks</h3>
+      <ul style={{listStyleType: 'none'}}>
         {
             (tasks || []).map((item, index) => (
               <li key={index}>
                 <input
+                  style={{transform: 'scale(1.5)', marginRight: '10px'}}
                   type="checkbox"
                   checked={item.completed}
                   onChange={() => toggleComplete(index)}
@@ -53,13 +46,22 @@ function Tasks (props){
                   value={item.task}
                   onChange={(e) => updateTask(e, index)}
                 />
-                {item.task}
-                <span onClick={()=>removeTask(index)}>    X</span>
+                <span style={{ color: '#a00', fontWeight: 'bold', marginLeft:'15px'}} onClick={()=>removeTask(index)}> X</span>
               </li>
             ))
         }
+        <li>
+          <form onSubmit={addTask}>
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+            />
+            {/*<button type="submit">+</button>*/}
+          </form>
+        </li>
       </ul>
-    </>
+    </div>
   )
 }
 
