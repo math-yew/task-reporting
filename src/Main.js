@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Tasks } from './Tasks';
+import { Days } from './Days';
 import { ActionStepsTaken } from './ActionStepsTaken';
+import { NextSteps } from './NextSteps';
 
 const Main = (props) => {
 
@@ -22,9 +24,9 @@ const Main = (props) => {
   const [name, setName] = useState("");
   const [startDate, setStartDate] = useState("");
   const [description, setDescription] = useState("");
-  const [nextSteps, setNextSteps] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [actionStepsTaken, setActionStepsTaken] = useState([]);
+  const [nextSteps, setNextSteps] = useState([]);
   const [archive, setArchive] = useState(false);
   const [inSalesforce, setInSalesforce] = useState(false);
   const [inTimecard, setInTimecard] = useState(false);
@@ -41,6 +43,7 @@ const Main = (props) => {
         setDays(res.data.days);
         setTasks(res.data.tasks);
         setActionStepsTaken(res.data.actionStepsTaken);
+        setNextSteps(res.data.nextSteps);
         setName(res.data.name);
         setDescription(res.data.description);
         setStartDate(res.data.startDate);
@@ -56,6 +59,7 @@ const Main = (props) => {
       setDays(initialDays);
       setTasks([]);
       setActionStepsTaken([]);
+      setNextSteps([]);
       setName("");
       setDescription("");
       setStartDate(null);
@@ -111,6 +115,7 @@ const Main = (props) => {
       readyData.days = days;
       readyData.tasks = [...tasks];
       readyData.actionStepsTaken = [...actionStepsTaken];
+      readyData.nextSteps = [...nextSteps];
       readyData.archive = archive;
       readyData.inSalesforce = inSalesforce;
       readyData.inTimecard = inTimecard;
@@ -185,6 +190,7 @@ const Main = (props) => {
       </label>
 
       <ActionStepsTaken actionStepsTaken={actionStepsTaken} setActionStepsTaken={setActionStepsTaken} />
+      <NextSteps nextSteps={nextSteps} setNextSteps={setNextSteps} />
       <Tasks tasks={tasks} setTasks={setTasks} />
 
 
@@ -206,19 +212,6 @@ const Main = (props) => {
   );
 };
 
-function Days (props){
-  let { days } = props;
-  return(
-    <div>
-      <input className="day" type="text" name="monday" placeholder="Mon" value={days.monday||""} onChange={(e)=>props.changeDays(e)} />
-      <input className="day" type="text" name="tuesday" placeholder="Tue" value={days.tuesday||""} onChange={(e)=>props.changeDays(e)} />
-      <input className="day" type="text" name="wednesday" placeholder="Wed" value={days.wednesday||""} onChange={(e)=>props.changeDays(e)} />
-      <input className="day" type="text" name="thursday" placeholder="Thur" value={days.thursday||""} onChange={(e)=>props.changeDays(e)} />
-      <input className="day" type="text" name="friday" placeholder="Fri" value={days.friday||""} onChange={(e)=>props.changeDays(e)} />
-      <input className="day" type="text" name="saturday" placeholder="Sat" value={days.saturday||""} onChange={(e)=>props.changeDays(e)} />
-      <input className="day" type="text" name="sunday" placeholder="Sun" value={days.sunday||""} onChange={(e)=>props.changeDays(e)} />
-    </div>
-  )
-}
+
 
 export default Main;

@@ -24,7 +24,7 @@ function ActionStepsTaken (props){
 
   return (
     <div style={{display:'flex', flexFlow: 'column wrap', alignItems: 'center'}}>
-      <h3>ActionStepsTaken</h3>
+      <h3>Action StepsTaken</h3>
       <ul style={{listStyleType: 'none'}}>
         {
             (actionStepsTaken || []).map((item, index) => (

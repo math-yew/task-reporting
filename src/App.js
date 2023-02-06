@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 // import './App.css';
+import './styles.css';
 import Cases from './Cases';
 import Main from './Main';
 
