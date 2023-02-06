@@ -78,17 +78,18 @@ app.put('/data/:id', (req, res) => {
   });
 });
 
-// app.delete('/data/:id', (req, res) => {
-//   db.collection('task_reporting').deleteOne({_id: ObjectId(req.params.id)}, (err, result) => {
-//     if (err) return console.log(err);
-//     res.send(result);
-//   });
-// });
-
 app.delete('/data/:id', (req, res) => {
   console.log("delete");
-  db.collection('task_reporting').deleteMany({tasks: []}, (err, result) => {
+  db.collection('task_reporting').deleteOne({_id: ObjectId(req.params.id)}, (err, result) => {
     if (err) return console.log(err);
     res.send(result);
   });
 });
+
+// app.delete('/data/:id', (req, res) => {
+//   console.log("delete");
+//   db.collection('task_reporting').deleteMany({tasks: []}, (err, result) => {
+//     if (err) return console.log(err);
+//     res.send(result);
+//   });
+// });

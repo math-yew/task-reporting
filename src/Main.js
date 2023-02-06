@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Tasks } from './Tasks';
 import { Days } from './Days';
 import { ActionStepsTaken } from './ActionStepsTaken';
 import { NextSteps } from './NextSteps';
+import Service from './Service';
 
 const Main = (props) => {
 
@@ -37,7 +37,7 @@ const Main = (props) => {
   useEffect(() => {
     console.log("useEffect");
     if(!!id) {
-      axios.get(`http://localhost:3003/data/${id}`)
+      Service.getCase(id)
       .then(res => {
         setData(res.data);
         setDays(res.data.days);
@@ -124,27 +124,21 @@ const Main = (props) => {
   }
 
     if(!!id && !duplicate){
-      axios.put(`http://localhost:3003/data/${id}`, readyData)
-        .then(res => {
-          console.log(res.status == 200);
-          // setId(id);
-        });
+      Service.updateCase(id, readyData)
+      .then((res)=>{
+        if(res.status == '200') setId(id);
+      });
     }else {
       readyData.startDate = new Date();
       console.log(readyData.startDate);
-      axios.post('http://localhost:3003/data', readyData)
-      .then(res => {
-          console.log(res.status == 200);
-          // setId(id);
-      });
+      Service.postCase(readyData)
+      .catch(err => console.log(err));
     }
   }
 
   const handleDelete = () => {
-    axios.delete(`http://localhost:3003/data/${id}`)
-      .then(res => {
-        setId(id);
-      });
+    Service.deleteCase(id)
+      .then(res => setId(id));
   }
 
   return (

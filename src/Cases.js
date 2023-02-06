@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import Service from './Service';
 
 
 const Cases = (props) => {
@@ -8,11 +8,8 @@ const Cases = (props) => {
   const [showArchived, setShowArchived] = useState(false);
 
   useEffect(() => {
-    axios.get(`http://localhost:3003/cases/${showArchived}`)
-      .then(res => {
-        setData(res.data);
-        }
-      );
+    Service.getAllCases(showArchived)
+      .then(res => setData(res.data));
   }, [id, showArchived]);
 
   return (
