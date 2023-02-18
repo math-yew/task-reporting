@@ -14,7 +14,7 @@ const Cases = (props) => {
 
   return (
     <div style={{ display: 'block'}}>
-      <p>{showArchived.toString()}</p>
+      <h1>Cases</h1>
       <input
         style={{transform: 'scale(1.5)', marginRight: '10px'}}
         type="checkbox"
@@ -23,7 +23,6 @@ const Cases = (props) => {
         onChange={() => setShowArchived(!showArchived)}
       />
       <label name="showArchived">Show Archived</label>
-      <h1>Cases</h1>
       <div  style={{ display: 'flex', width: '100%', justifyContent: 'right'}}>
         <div  style={{backgroundColor:'#afa', color: '#0a0', height: '50px', width: '50px',
         borderRadius: '50px', textAlign: 'center', justifyContent: 'center', fontSize:'50px',
@@ -31,7 +30,7 @@ const Cases = (props) => {
       </div>
       <div  style={{ width: '100%'}}>
         {data.map((job, i)=>(
-          <div key={i} style={{backgroundColor:(job.archive) ? '#889' : '#aaf', padding: '10px', boxSizing: 'content-box', margin: '10px'}} onClick={()=>setId(job._id)}>
+          <div className="caseCard" key={i} style={{backgroundColor:(job.archive) ? '#889' : '#aaf', padding: '10px', boxSizing: 'content-box', margin: '10px'}} onClick={()=>setId(job._id)}>
             <p>{job.name}</p>
             <p>{job.description}</p>
           </div>

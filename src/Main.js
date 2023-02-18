@@ -3,6 +3,7 @@ import { Tasks } from './Tasks';
 import { Days } from './Days';
 import { ActionStepsTaken } from './ActionStepsTaken';
 import { NextSteps } from './NextSteps';
+import { SalesforceButton } from './SalesforceButton';
 import Service from './Service';
 
 const Main = (props) => {
@@ -186,10 +187,11 @@ const Main = (props) => {
       <ActionStepsTaken actionStepsTaken={actionStepsTaken} setActionStepsTaken={setActionStepsTaken} />
       <NextSteps nextSteps={nextSteps} setNextSteps={setNextSteps} />
       <Tasks tasks={tasks} setTasks={setTasks} />
+      <SalesforceButton actionStepsTaken={actionStepsTaken} nextSteps={nextSteps} />
 
+      <br/><br/><br/>
 
       <button  onClick={()=>saveCase()}>save</button>
-
       <button  onClick={()=>saveCase(true)}>Duplicate</button>
       <button  onClick={handleDelete}>Delete</button>
 
