@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Tasks } from './Tasks';
 import { Days } from './Days';
+import { Checkmarks } from './Checkmarks';
 import { ActionStepsTaken } from './ActionStepsTaken';
 import { NextSteps } from './NextSteps';
 import { SalesforceButton } from './SalesforceButton';
@@ -144,37 +145,14 @@ const Main = (props) => {
 
   return (
     <>
-      <p>date: {startDate}</p>
-      <input type="text" name="name" placeholder="Name" value={name ||""} onChange={(e)=>changeField(e)} />
-      <input type="text" name="description" placeholder="Description" value={description ||""} onChange={(e)=>changeField(e)} />
+      <label name="name">Case:</label>
+      <input style={{width:"100%"}} type="text" name="name" placeholder="Name" value={name ||""} onChange={(e)=>changeField(e)} />
+      <label name="description">Description:</label>
+      <input style={{width:"100%"}} type="text" name="description" placeholder="Description" value={description ||""} onChange={(e)=>changeField(e)} />
       <Days days={days || initialDays} changeDays={changeDays} />
+      <Checkmarks inSalesforce={inSalesforce} setInSalesforce={setInSalesforce}  inTimecard={inTimecard}  setInTimecard={setInTimecard}  inSlack={inSlack}  setInSlack={setInSlack} />
 
-      <input
-        style={{transform: 'scale(1.5)', marginRight: '10px'}}
-        type="checkbox"
-        name="inSalesforce"
-        checked={inSalesforce || false}
-        onChange={() => setInSalesforce(!inSalesforce)}
-      />
-      <label name="archive">Salesforce</label>
 
-      <input
-        style={{transform: 'scale(1.5)', marginRight: '10px'}}
-        type="checkbox"
-        name="inTimecard"
-        checked={inTimecard || false}
-        onChange={() => setInTimecard(!inTimecard)}
-      />
-      <label name="archive">Timecard</label>
-
-      <input
-        style={{transform: 'scale(1.5)', marginRight: '10px'}}
-        type="checkbox"
-        name="inSlack"
-        checked={inSlack || false}
-        onChange={() => setInSlack(!inSlack)}
-      />
-      <label name="archive">Slack</label>
 
       <label>
         Notes:

@@ -1,7 +1,7 @@
 function Days (props){
   let { days } = props;
   return(
-    <div style={{display:'flex', flexDirection:'row'}}>
+    <div style={{display:'flex', flexDirection:'row', justifyContent: 'center'}}>
       <div className="dayInput">
         <label name="monday">Mon</label>
         <input className="day" type="text" name="monday" placeholder="" value={days.monday||""} onChange={(e)=>props.changeDays(e)} />

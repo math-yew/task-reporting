@@ -1,20 +1,63 @@
-.dayInput {
-  width: 75px;
+
+body {
+  background-color: #eee;
 }
 
-input {
+.dayInput {
+  width: 4vw;
+  margin: 10px;
+}
+
+.dayInput input {
+  width: 90%;
+}
+
+input, textarea {
+  border: 2px solid #aaa;
   padding: 10px;
+  margin: 0px 10px 20px 10px;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: rgba(0,0,0,.1);
+  padding: 10px 20px;
+  font-size: 1.25em;
+  color: #fff;
+  border: 2px solid #fff;
+  margin: 10px;
+}
+
+button:hover {
+  background-color: rgba(0,0,0,.2);
+}
+
+label {
+  margin-left: 10px;
+}
+
+textarea {
+  padding: 10px;
+  margin: 10px;
 }
 
 .caseCard {
-  background-color:'#afa';
-  color: '#0a0';
-  height: '50px';
-  width: '50px';
-  border-radius: '50px';
-  text-align: 'center';
-  justify-content: 'center';
-  font-size:'50px';
-  line-height: '40px';
-  box-shadow: '0px 2px 7px #aaa'
+  box-shadow: 0px 2px 7px #aaa;
+  color: #555;
+  padding: 5px 10px;
+  boxSizing: content-box;
+  margin: 10px;
+  overflow: hidden;
+}
+
+.caseCard p{
+  margin: 0px;
+}
+
+.triangles {
+  background-image:url("./triangle ceiling.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
 }
