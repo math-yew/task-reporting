@@ -31,7 +31,7 @@ const Cases = (props) => {
       <div  style={{ width: '100%'}}>
         {data.map((job, i)=>(
           <div className="caseCard" key={i} style={{backgroundColor:(job.archive) ? '#88d6d4' : '#e2fdff'}} onClick={()=>setId(job._id)}>
-            <h3>{job.name}</h3>
+            <h3 style={{margin: '0px'}}>{job.name}</h3>
             <p>{job.description}</p>
           </div>
         ))}

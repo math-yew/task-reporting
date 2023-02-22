@@ -31,7 +31,7 @@ function Tasks (props){
   return (
     <div style={{display:'flex', flexFlow: 'column wrap', alignItems: 'center'}}>
       <h3>Tasks</h3>
-      <ul style={{listStyleType: 'none'}}>
+      <ul style={{listStyleType: 'none', width: '100%'}}>
         {
             (tasks || []).map((item, index) => (
               <li key={index}>
@@ -42,11 +42,12 @@ function Tasks (props){
                   onChange={() => toggleComplete(index)}
                 />
                 <input
+                  style={{ width: '70%'}}
                   type="text"
                   value={item.task}
                   onChange={(e) => updateTask(e, index)}
                 />
-                <span style={{ color: '#a00', fontWeight: 'bold', marginLeft:'15px'}} onClick={()=>removeTask(index)}> X</span>
+                <span style={{ color: '#a00', fontWeight: 'bold', marginLeft:'15px'}} onClick={()=>removeTask(index)}><i class="fa fa-trash"></i></span>
               </li>
             ))
         }

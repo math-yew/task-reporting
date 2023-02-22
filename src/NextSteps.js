@@ -46,9 +46,9 @@ function NextSteps (props){
   };
 
   return (
-    <div style={{display:'flex', flexFlow: 'column wrap', alignItems: 'center'}}>
+    <div style={{display:'flex', flexFlow: 'column wrap', justifyContent: 'left'}}>
       <h3>Next Steps</h3>
-      <ul style={{listStyleType: 'none'}}>
+      <ul style={{listStyleType: 'none', width: '100%'}}>
         {
             (nextSteps || []).map((item, index) => (
               <li key={index}
@@ -60,12 +60,12 @@ function NextSteps (props){
                 onDragEnd={()=>dropDrag()}
               >
                 <input
-                  style = {{margin: "0px", borderRadius: "5px",  transition: ".3s", backgroundColor:(eclipsing == index) ? hoverColor : "#ffffff", border:(eclipsing == index) ? "solid thin #dfd" : "solid thin #555"}}
+                  style = {{margin: "0px", width: '80%', transition: ".3s", backgroundColor:(eclipsing == index) ? hoverColor : "#ffffff", border:(eclipsing == index) ? "solid thin #dfd" : "solid thin #555"}}
                   type="text"
                   value={item}
                   onChange={(e) => updateNextSteps(e, index)}
                 />
-                <span style={{ color: '#a00', fontWeight: 'bold', marginLeft:'15px'}} onClick={()=>removeNextSteps(index)}>X</span>
+                <span style={{ color: '#a00', fontWeight: 'bold', marginLeft:'15px'}} onClick={()=>removeNextSteps(index)}><i class="fa fa-trash"></i></span>
               </li>
             ))
         }

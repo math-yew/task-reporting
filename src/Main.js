@@ -150,26 +150,42 @@ const Main = (props) => {
       <label name="description">Description:</label>
       <input style={{width:"100%"}} type="text" name="description" placeholder="Description" value={description ||""} onChange={(e)=>changeField(e)} />
       <Days days={days || initialDays} changeDays={changeDays} />
-      <Checkmarks inSalesforce={inSalesforce} setInSalesforce={setInSalesforce}  inTimecard={inTimecard}  setInTimecard={setInTimecard}  inSlack={inSlack}  setInSlack={setInSlack} />
+      <div style={{width: "100%", display: "flex", flexFlow:"row"}}>
+        <div style={{width:"50%", padding:"10px", boxSizing:"border-box"}}>
+          <div style={{width:"100%", backgroundColor:"rgba(255,255,255,.5)", padding:"10px", boxSizing:"border-box"}}>
+            <SalesforceButton actionStepsTaken={actionStepsTaken} nextSteps={nextSteps} />
+            <ActionStepsTaken actionStepsTaken={actionStepsTaken} setActionStepsTaken={setActionStepsTaken} />
+            <NextSteps nextSteps={nextSteps} setNextSteps={setNextSteps} />
+          </div>
+        </div>
+        <div style={{width:"50%"}}>
+          <div style={{width: "100%", display: "flex", flexFlow:"row"}}>
+            <div style={{width:"50%"}}>
+              <Checkmarks inSalesforce={inSalesforce} setInSalesforce={setInSalesforce}  inTimecard={inTimecard}  setInTimecard={setInTimecard}  inSlack={inSlack}  setInSlack={setInSlack} />
+            </div>
+            <div style={{width:"50%", display: "flex", justifyContent:"right"}}>
+              <button  onClick={()=>saveCase()}>Save</button>
+            </div>
+          </div>
+          <label>
+            Notes: <br/>
+            <textarea
+              value={notes}
+              onChange={e => setNotes(e.target.value)}
+            />
+          </label>
+          <br/>
+          <Tasks tasks={tasks} setTasks={setTasks} />
+        </div>
+      </div>
 
 
 
-      <label>
-        Notes:
-        <textarea
-          value={notes}
-          onChange={e => setNotes(e.target.value)}
-        />
-      </label>
 
-      <ActionStepsTaken actionStepsTaken={actionStepsTaken} setActionStepsTaken={setActionStepsTaken} />
-      <NextSteps nextSteps={nextSteps} setNextSteps={setNextSteps} />
-      <Tasks tasks={tasks} setTasks={setTasks} />
-      <SalesforceButton actionStepsTaken={actionStepsTaken} nextSteps={nextSteps} />
+
 
       <br/><br/><br/>
 
-      <button  onClick={()=>saveCase()}>save</button>
       <button  onClick={()=>saveCase(true)}>Duplicate</button>
       <button  onClick={handleDelete}>Delete</button>
 

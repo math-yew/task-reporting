@@ -37,7 +37,7 @@ function SalesforceButton (props){
         }
       </ul>
     </div>
-    <button  onClick={()=>copySalesforceText()}>Saleforce Copy</button>
+    <button  onClick={()=>copySalesforceText()}><i class="fa fa-copy"></i></button>
     </>
   )
 }
